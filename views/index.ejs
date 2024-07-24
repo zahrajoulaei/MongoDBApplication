@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jewelry Shop</title>
+  <link rel="stylesheet" href="/css/styles.css">
+
+</head>
+<body>
+  <h1>Jewelry Shop</h1>
+
+  <!-- form for post new item -->
+  <h2>Add New Jewelry</h2>
+  <form id="addJewelryForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br>
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="category" required>
+    <br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required>
+    <br>
+    <button type="submit">Add Jewelry</button>
+  </form>
+
+  <!-- list of jewelries -->
+  <h2>Jewelry List</h2>
+  <ul>
+    <% jewelry.forEach(item => { %>
+      <li>
+        <strong><%= item.name %></strong> - <%= item.category %> - $<%= item.price %>
+        <button onclick="deleteJewelry('<%= item._id %>')">Delete</button>
+        <button onclick="showUpdateForm('<%= item._id %>', '<%= item.name %>', '<%= item.category %>', '<%= item.price %>')">Update</button>
+      </li>
+    <% }) %>
+  </ul>
+
+  <!-- form for update the jewelry -->
+  <h2>Update Jewelry</h2>
+  <form id="updateJewelryForm" style="display:none;">
+    <input type="hidden" id="updateId" name="id">
+    <label for="updateName">Name:</label>
+    <input type="text" id="updateName" name="name" required>
+    <br>
+    <label for="updateCategory">Category:</label>
+    <input type="text" id="updateCategory" name="category" required>
+    <br>
+    <label for="updatePrice">Price:</label>
+    <input type="number" id="updatePrice" name="price" required>
+    <br>
+    <button type="submit">Update Jewelry</button>
+  </form>
+
+  <script>
+    document.getElementById('addJewelryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const category = document.getElementById('category').value;
+      const price = document.getElementById('price').value;
+      
+      fetch('/jewelry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, category, price })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data._id) {
+          alert('Jewelry added successfully');
+          location.reload();
+        } else {
+          alert('Error adding jewelry');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+
+    function deleteJewelry(id) {
+      fetch(`/jewelry/${id}`, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert('Item deleted successfully');
+          location.reload();
+        } else {
+          alert('Error deleting item');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    function showUpdateForm(id, name, category, price) {
+      document.getElementById('updateId').value = id;
+      document.getElementById('updateName').value = name;
+      document.getElementById('updateCategory').value = category;
+      document.getElementById('updatePrice').value = price;
+      document.getElementById('updateJewelryForm').style.display = 'block';
+    }
+
+    document.getElementById('updateJewelryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const id = document.getElementById('updateId').value;
+      const name = document.getElementById('updateName').value;
+      const category = document.getElementById('updateCategory').value;
+      const price = document.getElementById('updatePrice').value;
+      
+      fetch(`/jewelry/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, category, price })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.modifiedCount > 0) {
+          alert('Jewelry updated successfully');
+          location.reload();
+        } else {
+          alert('Error updating jewelry');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
+</body>
+</html>
