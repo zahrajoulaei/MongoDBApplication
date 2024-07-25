@@ -10,9 +10,9 @@ body {
   }
 
   header {
-    background-image: url('/images/jewelry.jpeg');
+    background-image: url('/images/jewelry.png');
     background-position: center;
-    min-height: 800px;
+    min-height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
