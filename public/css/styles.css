@@ -8,6 +8,33 @@ body {
   h1, h2 {
     color: #343a40;
   }
+
+  header {
+    background-image: url('/images/jewelry.jpeg');
+    background-position: center;
+    min-height: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+ 
+   
+  }
+  header h1 {
+    color : white;
+    font-size: 50px;
+  }
+
+.card {
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  margin: 0 auto;
+}
   
   form {
     margin-bottom: 20px;
@@ -46,6 +73,10 @@ body {
     margin: 5px 0;
     border: 1px solid #ced4da;
     border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
   
   strong {

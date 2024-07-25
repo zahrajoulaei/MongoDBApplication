@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const { connectToDb } = require('./db');
 const jewelryRoutes = require('./routes/jewelry');
+const userRoutes = require('./routes/users')
+const commentRoutes = require('./routes/comments')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +17,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use('/jewelry', jewelryRoutes);
+app.use('/users', userRoutes);
+app.use('/comments', commentRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('Welcome to the jewelry shop! the server works! go to the /jewelry to see list of all items.');

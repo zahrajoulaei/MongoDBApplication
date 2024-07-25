@@ -5,25 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jewelry Shop</title>
   <link rel="stylesheet" href="/css/styles.css">
-
 </head>
 <body>
-  <h1>Jewelry Shop</h1>
+  <header>
+    <h1>Jewelry Shop</h1>
+  </header>
 
   <!-- form for post new item -->
-  <h2>Add New Jewelry</h2>
-  <form id="addJewelryForm">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <br>
-    <label for="category">Category:</label>
-    <input type="text" id="category" name="category" required>
-    <br>
-    <label for="price">Price:</label>
-    <input type="number" id="price" name="price" required>
-    <br>
-    <button type="submit">Add Jewelry</button>
-  </form>
+  <div class="card">
+    <h2>Add New Jewelry</h2>
+    <form id="addJewelryForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <br>
+      <label for="category">Category:</label>
+      <input type="text" id="category" name="category" required>
+      <br>
+      <label for="price">Price:</label>
+      <input type="number" id="price" name="price" required>
+      <br>
+      <button type="submit">Add Jewelry</button>
+    </form>
+  </div>
 
   <!-- list of jewelries -->
   <h2>Jewelry List</h2>
@@ -38,28 +41,98 @@
   </ul>
 
   <!-- form for update the jewelry -->
-  <h2>Update Jewelry</h2>
-  <form id="updateJewelryForm" style="display:none;">
-    <input type="hidden" id="updateId" name="id">
-    <label for="updateName">Name:</label>
-    <input type="text" id="updateName" name="name" required>
-    <br>
-    <label for="updateCategory">Category:</label>
-    <input type="text" id="updateCategory" name="category" required>
-    <br>
-    <label for="updatePrice">Price:</label>
-    <input type="number" id="updatePrice" name="price" required>
-    <br>
-    <button type="submit">Update Jewelry</button>
-  </form>
+  <div class="card">
+    <h2>Update Jewelry</h2>
+    <form id="updateJewelryForm" style="display:none;">
+      <input type="hidden" id="updateId" name="id">
+      <label for="updateName">Name:</label>
+      <input type="text" id="updateName" name="name" required>
+      <br>
+      <label for="updateCategory">Category:</label>
+      <input type="text" id="updateCategory" name="category" required>
+      <br>
+      <label for="updatePrice">Price:</label>
+      <input type="number" id="updatePrice" name="price" required>
+      <br>
+      <button type="submit">Update Jewelry</button>
+    </form>
+  </div>
+
+  <!-- form for post new user -->
+  <div class="card">
+    <h2>Add New User</h2>
+    <form id="addUserForm">
+      <label for="username">Name:</label>
+      <input type="text" id="username" name="username" required>
+      <br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <br>
+      <button type="submit">Add User</button>
+    </form>
+  </div>
+
+  <!-- list of users -->
+  <h2>User List</h2>
+  <ul>
+    <% users.forEach(user => { %>
+      <li>
+        <strong><%= user.name %></strong> - <%= user.email %>
+        <button onclick="deleteUser('<%= user._id %>')">Delete</button>
+        <button onclick="showUserUpdateForm('<%= user._id %>', '<%= user.name %>', '<%= user.email %>')">Update</button>
+      </li>
+    <% }) %>
+  </ul>
+
+  <!-- form for update the user -->
+  <div class="card">
+    <h2>Update User</h2>
+    <form id="updateUserForm" style="display:none;">
+      <input type="hidden" id="updateUserId" name="id">
+      <label for="updateUsername">Name:</label>
+      <input type="text" id="updateUsername" name="name" required>
+      <br>
+      <label for="updateEmail">Email:</label>
+      <input type="email" id="updateEmail" name="email" required>
+      <br>
+      <button type="submit">Update User</button>
+    </form>
+  </div>
+
+  <!-- form for post new comment -->
+  <div class="card">
+    <h2>Add New Comment</h2>
+    <form id="addCommentForm">
+      <label for="userId">User ID:</label>
+      <input type="text" id="userId" name="userId" required>
+      <br>
+      <label for="commentText">Comment:</label>
+      <input type="text" id="commentText" name="commentText" required>
+      <br>
+      <button type="submit">Add Comment</button>
+    </form>
+  </div>
+
+  <!-- list of comments -->
+  <h2>Comment List</h2>
+  <ul>
+    <% comments.forEach(comment => { %>
+      <li>
+        <strong>User ID: <%= comment.userId %></strong> - <%= comment.text %>
+        <button onclick="deleteComment('<%= comment._id %>')">Delete</button>
+        <button onclick="showCommentUpdateForm('<%= comment._id %>', '<%= comment.userId %>', '<%= comment.text %>')">Update</button>
+      </li>
+    <% }) %>
+  </ul>
 
   <script>
+    // Add Jewelry Form
     document.getElementById('addJewelryForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const name = document.getElementById('name').value;
       const category = document.getElementById('category').value;
       const price = document.getElementById('price').value;
-      
+
       fetch('/jewelry', {
         method: 'POST',
         headers: {
@@ -109,7 +182,7 @@
       const name = document.getElementById('updateName').value;
       const category = document.getElementById('updateCategory').value;
       const price = document.getElementById('updatePrice').value;
-      
+
       fetch(`/jewelry/${id}`, {
         method: 'PATCH',
         headers: {
@@ -128,6 +201,152 @@
       })
       .catch(error => console.error('Error:', error));
     });
-  </script>
+
+    // Add User Form
+    document.getElementById('addUserForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+
+      fetch('/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data._id) {
+          alert('User added successfully');
+          location.reload();
+        } else {
+          alert('Error adding user');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+
+    function deleteUser(id) {
+      fetch(`/users/${id}`, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert('User deleted successfully');
+          location.reload();
+        } else {
+          alert('Error deleting user');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+
+    function showUserUpdateForm(id, name, email) {
+      document.getElementById('updateUserId').value = id;
+      document.getElementById('updateUsername').value = name;
+      document.getElementById('updateEmail').value = email;
+document.getElementById('updateUserForm').style.display = 'block';
+}
+document.getElementById('updateUserForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const id = document.getElementById('updateUserId').value;
+  const name = document.getElementById('updateUsername').value;
+  const email = document.getElementById('updateEmail').value;
+
+  fetch(`/users/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name, email })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.modifiedCount > 0) {
+      alert('User updated successfully');
+      location.reload();
+    } else {
+      alert('Error updating user');
+    }
+  })
+  .catch(error => console.error('Error:', error));
+});
+
+// Add Comment Form
+document.getElementById('addCommentForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const userId = document.getElementById('userId').value;
+  const text = document.getElementById('commentText').value;
+
+  fetch('/comments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ userId, text })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data._id) {
+      alert('Comment added successfully');
+      location.reload();
+    } else {
+      alert('Error adding comment');
+    }
+  })
+  .catch(error => console.error('Error:', error));
+});
+
+function deleteComment(id) {
+  fetch(`/comments/${id}`, {
+    method: 'DELETE'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.message) {
+      alert('Comment deleted successfully');
+      location.reload();
+    } else {
+      alert('Error deleting comment');
+    }
+  })
+  .catch(error => console.error('Error:', error));
+}
+
+function showCommentUpdateForm(id, userId, text) {
+  document.getElementById('updateCommentId').value = id;
+  document.getElementById('updateCommentUserId').value = userId;
+  document.getElementById('updateCommentText').value = text;
+  document.getElementById('updateCommentForm').style.display = 'block';
+}
+
+document.getElementById('updateCommentForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const id = document.getElementById('updateCommentId').value;
+  const userId = document.getElementById('updateCommentUserId').value;
+  const text = document.getElementById('updateCommentText').value;
+
+  fetch(`/comments/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ userId, text })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.modifiedCount > 0) {
+      alert('Comment updated successfully');
+      location.reload();
+    } else {
+      alert('Error updating comment');
+    }
+  })
+  .catch(error => console.error('Error:', error));
+});
+
+</script>
 </body>
 </html>

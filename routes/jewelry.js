@@ -1,22 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
-const { getDb } = require('../db'); 
+const { getDb } = require('../db');
 
-// GET for ejs 
+//GET
 router.get('/', async (req, res) => {
   try {
     const db = getDb();
     const jewelryCollection = db.collection('jewelry');
+    const usersCollection = db.collection('users');
+    const commentsCollection = db.collection('comments');
+
     const jewelry = await jewelryCollection.find().toArray();
-    res.render('index', { jewelry });
+    const users = await usersCollection.find().toArray();
+    const comments = await commentsCollection.find().toArray();
+
+    res.render('index', { jewelry, users, comments });
   } catch (err) {
     console.error('Error in GET /jewelry:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-//GET for id
+//GET id
 router.get('/:id', async (req, res) => {
   try {
     const db = getDb();
@@ -33,7 +39,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-//POST
+// POST
 router.post('/', async (req, res) => {
   try {
     const db = getDb();
@@ -54,7 +60,6 @@ router.post('/', async (req, res) => {
 });
 
 //PATCH
-
 router.patch('/:id', async (req, res) => {
   try {
     const db = getDb();
@@ -72,7 +77,7 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-// DELETE
+//DELETE
 router.delete('/:id', async (req, res) => {
   try {
     const db = getDb();
